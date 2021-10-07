@@ -1,7 +1,10 @@
 import React from 'react';
 
+import {Title} from './styles'
+
 export const Dashboard: React.FC = () => {
   return (
-    <h2>Dashboard</h2>
+    // utiliza componente estilizado
+    <Title>Dashboard</Title>
   )
 }
