@@ -52,7 +52,11 @@ export const Dashboard: React.FC = () => {
       {/* quando submeter chama a função handleAddRepository */}
       <Form onSubmit={handleAddRepository}>
         {/* quando input sofrer alteração será chamado o método handleInputChange */}
-        <input onChange={handleInputChange} placeholder="username/repository_name"/>
+        <input 
+          onChange={handleInputChange} 
+          placeholder="username/repository_name"
+          value={newRepository}
+        />
         <button type='submit'> Buscar </button>
       </Form>
       <Repos>
