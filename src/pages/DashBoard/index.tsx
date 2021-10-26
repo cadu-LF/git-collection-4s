@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import {Form, Repos, Title} from './styles'
+import {Form, Repos, Title, Error} from './styles'
 import logo from '../../assets/logo.svg'
 
 import { api } from '../../services/api';
@@ -20,7 +20,23 @@ export const Dashboard: React.FC = () => {
   // useState cria um estado
   const [newRepository, setNewRepository] = useState('');
   // esse estádo é uma lista de GitHubRepository
-  const [repositories, setRepositories] = useState<GitHubRepository[]>([]);
+  const [repositories, setRepositories] = useState<GitHubRepository[]>( () => {
+    const storageRepos = localStorage.getItem('@GitCollection:repositories')
+
+    if (storageRepos) { // alimenta a variável repositories
+      return JSON.parse(storageRepos); // converte string em json
+    }
+
+    return [] // retorna vazio caso localStorage não tenha nada
+  });
+  const [inputError, setInputError] = useState('')
+
+  // a função useEffect será executada toda vez que a variável repositories for alterada
+  React.useEffect( () => {
+    // converte antes para string
+    // é aqui que o item @GitCollection:repositories será alimentado
+    localStorage.setItem('@GitCollection:repositories', JSON.stringify(repositories))
+  }, [repositories])
 
   // função para lidar com a mudança no input
   // event representa o elemento html que sofreu a mudança
@@ -33,6 +49,12 @@ export const Dashboard: React.FC = () => {
   // quando retorna uma Promisse a função deve ser async
   async function handleAddRepository(event: React.FormEvent<HTMLFormElement>): Promise<void>{
     event.preventDefault();
+
+    if(!newRepository) {
+      setInputError('Informe o username/repositório')
+      return
+    }
+    setInputError('')
 
     // chama a api passando o restante da url que contém o q o usuário informou no input
     const response = await api.get<GitHubRepository>(`/repos/${newRepository}`);
@@ -50,7 +72,7 @@ export const Dashboard: React.FC = () => {
       {/* utiliza componente estilizado */}
       <Title>Dashboard</Title>
       {/* quando submeter chama a função handleAddRepository */}
-      <Form onSubmit={handleAddRepository}>
+      <Form hasError={Boolean(inputError)} onSubmit={handleAddRepository}>
         {/* quando input sofrer alteração será chamado o método handleInputChange */}
         <input 
           onChange={handleInputChange} 
@@ -59,6 +81,7 @@ export const Dashboard: React.FC = () => {
         />
         <button type='submit'> Buscar </button>
       </Form>
+        {inputError && <Error>{inputError}</Error>}
       <Repos>
         {/* percorre a lista de repositories */}
         {repositories.map( (repository, index) => (
