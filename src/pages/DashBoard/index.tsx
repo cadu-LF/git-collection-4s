@@ -5,6 +5,7 @@ import logo from '../../assets/logo.svg'
 
 import { api } from '../../services/api';
 import { Link } from 'react-router-dom';
+import {FiChevronRight} from 'react-icons/fi'
 
 export const Dashboard: React.FC = () => {
   // criar uma interface para bolar a estrutura de dados vindo do github
@@ -93,6 +94,7 @@ export const Dashboard: React.FC = () => {
                 <strong>{repository.full_name}</strong>
                 <p>{repository.description}</p>
               </div>
+              <FiChevronRight size={20}></FiChevronRight>
           </Link>
         ))}
       </Repos>

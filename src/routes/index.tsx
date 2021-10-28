@@ -10,7 +10,8 @@ export const Routes: React.FC = () => {
   return(
     <Switch>
       <Route component={Dashboard} path='/' exact/>
-      <Route component={Repository} path='/repositories'/>
+      {/* usamos o '+' como um caracter de escape */}
+      <Route component={Repository} path='/repositories/:repository+'/>
     </Switch>
   )
 }
